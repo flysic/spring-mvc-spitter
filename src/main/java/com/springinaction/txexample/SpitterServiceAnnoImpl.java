@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service("spitterAnnoService")
+// @Transactional(propagation=Propagation.NESTED)
 @Transactional(propagation=Propagation.REQUIRED)
 public class SpitterServiceAnnoImpl implements SpitterService {
 	
@@ -37,6 +38,7 @@ public class SpitterServiceAnnoImpl implements SpitterService {
 		} else {
 			spitterDao.saveSpitter(spitter);
 		}
+		// throw new RuntimeException("test");
 	}
 
 	@Override

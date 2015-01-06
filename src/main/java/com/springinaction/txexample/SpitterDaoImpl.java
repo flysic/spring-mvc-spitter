@@ -6,10 +6,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository("spitterDao")
-@Transactional
+@Transactional//(propagation=Propagation.NEVER)
 public class SpitterDaoImpl implements SpitterDao {
 	
 	private static final String RECENT_SPITTLES = "select s from spittle s";

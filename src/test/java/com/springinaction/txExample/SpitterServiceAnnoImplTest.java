@@ -2,6 +2,7 @@ package com.springinaction.txExample;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,11 @@ public class SpitterServiceAnnoImplTest {
 	@Autowired
 	@Qualifier("spitterAnnoService")
 	private SpitterService service;
+	
+	@After
+	public void cleanup() {
+		SimpleJdbcTestUtils.deleteFromTables(jdbcTemplate, "spitter");
+	}
 	
 	@Test
 	public void shouldCreateRowsAndIds() {
