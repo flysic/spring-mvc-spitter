@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository("spitterDao")
-@Transactional//(propagation=Propagation.NEVER)
+// @Transactional(propagation=Propagation.NEVER)
 public class SpitterDaoImpl implements SpitterDao {
 	
 	private static final String RECENT_SPITTLES = "select s from spittle s";

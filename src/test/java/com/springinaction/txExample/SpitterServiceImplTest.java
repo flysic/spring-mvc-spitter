@@ -2,9 +2,11 @@ package com.springinaction.txExample;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -25,16 +27,22 @@ import com.springinaction.txexample.SpitterService;
 		"classpath:test-dataSource-context.xml",
 		"classpath:test-transaction-context.xml"
 })
-@TransactionConfiguration(transactionManager="txMgr", defaultRollback=true)
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class})
-@Transactional
+// @TransactionConfiguration(transactionManager="txMgr", defaultRollback=true)
+// @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class})
+// @Transactional
 public class SpitterServiceImplTest {
 	
 	@Autowired
 	private SimpleJdbcTemplate jdbcTemplate;
 	
 	@Autowired
+	@Qualifier("spitterService")	
 	private SpitterService service;
+	
+	@After
+	public void cleanup() {
+		SimpleJdbcTestUtils.deleteFromTables(jdbcTemplate, "spitter");
+	}
 	
 	@Test
 	public void shouldCreateRowsAndIds() {
