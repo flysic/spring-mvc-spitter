@@ -42,7 +42,7 @@ public class Spitter implements Serializable {
 	@Size(min=3, max=50, message="Fullname must be between 3 and 50 characters long.")
 	private String fullName;
 	
-	@Pattern(regexp="[a-zA-Z0-9._+-%]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}", message="Invalid email address")
+	@Pattern(regexp="[a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}", message="Invalid email address")
 	private String email;
 	
 	private boolean updateByEmail;

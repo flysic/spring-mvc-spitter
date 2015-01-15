@@ -1,5 +1,7 @@
 package com.springinaction.txExample;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -15,7 +17,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.test.jdbc.SimpleJdbcTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.springinaction.txexample.Spitter;
 import com.springinaction.txexample.SpitterService;
@@ -23,12 +24,11 @@ import com.springinaction.txexample.SpitterService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
 		"classpath:persistence-context.xml",
-		"classpath:service-context.xml",
 		"classpath:test-dataSource-context.xml",
 		"classpath:test-transaction-context.xml"
 })
-// @TransactionConfiguration(transactionManager="txMgr", defaultRollback=true)
-// @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class})
+@TransactionConfiguration(transactionManager="txMgr", defaultRollback=true)
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class})
 // @Transactional
 public class SpitterServiceImplTest {
 	
@@ -36,7 +36,7 @@ public class SpitterServiceImplTest {
 	private SimpleJdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	@Qualifier("spitterService")	
+	@Qualifier("spitterService")
 	private SpitterService service;
 	
 	@After
@@ -46,6 +46,7 @@ public class SpitterServiceImplTest {
 	
 	@Test
 	public void shouldCreateRowsAndIds() {
+		List<Spitter> spitters = service.getAllSpitters();
 		Assert.assertEquals(0, SimpleJdbcTestUtils.countRowsInTable(jdbcTemplate, "spitter"));
 		Spitter spitter = new Spitter();
 		spitter.setUsername("username");

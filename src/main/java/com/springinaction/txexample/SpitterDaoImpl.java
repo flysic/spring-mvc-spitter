@@ -5,73 +5,68 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository("spitterDao")
-// @Transactional(propagation=Propagation.NEVER)
+@Transactional
 public class SpitterDaoImpl implements SpitterDao {
-	
-	private static final String RECENT_SPITTLES = "select s from spittle s";
-	private static final String All_SPITTERS = "select s form spitter s";
-	private static final String SPITTER_FOR_USERNAME = "select s from spitter s where s.username = :username";
-	private static final String SPITTLE_FOR_USERNAME = "select s form spittle s where s.spitter.username = :username";
+	private static final String RECENT_SPITTLES = "SELECT s FROM Spittle s";
+	private static final String ALL_SPITTERS = "SELECT s FROM Spitter s";
+	private static final String SPITTER_FOR_USERNAME = "SELECT s FROM Spitter s WHERE s.username = :username";
+	private static final String SPITTLES_BY_USERNAME = "SELECT s FROM Spittle s WHERE s.spitter.username = :username";
 
 	@PersistenceContext
-	private EntityManager em;
-	
-	@Override
+	private EntityManager em; // <co id="co_injectEM"/>
+
 	public void addSpitter(Spitter spitter) {
-		em.persist(spitter);
+		em.persist(spitter); // <co id="co_useEM"/>
 	}
 
-	@Override
-	public void saveSpitter(Spitter spitter) {
-		em.merge(spitter);
-	}
-
-	@Override
 	public Spitter getSpitterById(long id) {
-		return em.find(Spitter.class, id);
+		return em.find(Spitter.class, id); // <co id="co_useEM"/>
 	}
 
+	public void saveSpitter(Spitter spitter) {
+		em.merge(spitter); // <co id="co_useEM"/>
+	}
+
+	// <end id="java_contextualJpaDao"/>
 	@SuppressWarnings("unchecked")
-	@Override
-	public List<Spittle> getRecentSpittles() {
-		return (List<Spittle>)em.createQuery(RECENT_SPITTLES).getResultList();
+	public List<Spittle> getRecentSpittle() {
+		return (List<Spittle>) em.createQuery(RECENT_SPITTLES).getResultList();
 	}
 
-	@Override
 	public void saveSpittle(Spittle spittle) {
 		em.persist(spittle);
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public List<Spittle> getSpittlesForSpitter(Spitter spitter) {
-		return (List<Spittle>)em.createQuery(SPITTLE_FOR_USERNAME).setParameter("username", spitter.getUsername()).getResultList();
+		return (List<Spittle>) em.createQuery(SPITTLES_BY_USERNAME)
+				.setParameter("username", spitter.getUsername())
+				.getResultList();
 	}
 
-	@Override
 	public Spitter getSpitterByUsername(String username) {
-		return  (Spitter)em.createQuery(SPITTER_FOR_USERNAME).setParameter("username", username).getSingleResult();
+		return (Spitter) em.createQuery(SPITTER_FOR_USERNAME)
+				.setParameter("username", username).getSingleResult();
 	}
 
-	@Override
 	public void deleteSpittle(long id) {
-		em.remove(getSpittleById(id));
+		try {
+			em.remove(getSpittleById(id));
+		} catch (DataAccessException e) {
+		}
 	}
 
-	@Override
 	public Spittle getSpittleById(long id) {
-		return em.find(Spittle.class, id); 
+		return em.find(Spittle.class, id);
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public List<Spitter> getAllSpitters() {
-		return em.createQuery(All_SPITTERS).getResultList();
+	public List<Spitter> findAllSpitters() {
+		return em.createQuery(ALL_SPITTERS).getResultList();
 	}
-
 }

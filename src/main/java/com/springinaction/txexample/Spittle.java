@@ -23,72 +23,73 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name="spittle")
 public class Spittle implements Serializable {
+  private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-	
-	public Spittle() {
-		this.spitter = new Spitter();
-		this.spitter.setId(1L);
-	}
+  private Long id;
+  private Spitter spitter;
+  private String text;
+  
+  @DateTimeFormat(pattern="hh:mma MMM d, YYYY")
+  private Date when;
 
-	private long id;
-	private Spitter spitter;
-	private String text;
-	@DateTimeFormat(pattern="hh:mm MM DD, yyyy")
-	private Date when;
+  public Spittle() {
+    this.spitter = new Spitter();  // HARD-CODED FOR NOW
+    this.spitter.setId((long)1);
+  }
+  
+  @Id
+  @GeneratedValue(strategy = AUTO)
+  public Long getId() {
+    return this.id;
+  }
+  
+  public void setId(Long id) {
+    this.id = id;
+  }
+  
+  @Column(name="spittle_text")
+  @NotNull
+  @Size(min=1, max=140)
+  public String getText() {
+    return this.text;
+  }
+  
+  public void setText(String text) {
+    this.text = text;
+  }
+  
+  @Column(name="posted_time")
+  public Date getWhen() {
+    return this.when;
+  }
 
-	@Id
-	@GeneratedValue(strategy=AUTO)
-	public long getId() {
-		return id;
-	}
+  public void setWhen(Date when) {
+    this.when = when;
+  }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+  @ManyToOne
+  @JoinColumn(name="spitter_id")
+  public Spitter getSpitter() {
+    return this.spitter;
+  }
 
-	@ManyToOne
-	@JoinColumn(name="spitter_id")
-	public Spitter getSpitter() {
-		return spitter;
-	}
-
-	public void setSpitter(Spitter spitter) {
-		this.spitter = spitter;
-	}
-
-	@Column(name="spittleText")
-	@NotNull
-	@Size(min=1, max=140)
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	@Column(name="postedTime")
-	public Date getWhen() {
-		return when;
-	}
-
-	public void setWhen(Date when) {
-		this.when = when;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-	    return reflectionEquals(this, obj);
-	}
-	
-	@Override
-	public int hashCode() {
-		return reflectionHashCode(this); 
-	}
-	
-	@Override
-	public String toString() {
-			return reflectionToString(this); 
-	}
+  public void setSpitter(Spitter spitter) {
+    this.spitter = spitter;
+  }
+  
+  // plumbing
+  @Override
+  public boolean equals(Object obj) {
+    return reflectionEquals(this, obj);
+  }
+  
+  @Override
+  public int hashCode() {
+    return reflectionHashCode(this);
+  }
+  
+  @Override
+  public String toString() {
+    return reflectionToString(this);
+  }
 }

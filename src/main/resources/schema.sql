@@ -14,6 +14,6 @@ create table spittle (
 	id integer identity primary key,
 	spitter_id integer not null,
 	spittle_text varchar(2000) not null,
-	postedTime date not null,
+	posted_time date not null,
 	foreign key (spitter_id) references spitter(id)
 );
