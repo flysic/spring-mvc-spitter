@@ -3,9 +3,9 @@ package com.springinaction.txexample;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,20 +23,15 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/spitters")
 public class SpitterController {
+	
+	@Autowired
+	private SpitterService spitterService;
 
-	private final SpitterService spitterService;
-
-	// @Value("#{s3Properties['s3.accessKey']}")
 	@Value("1TT5F2KCS94CCAGB0CR2")
 	private String s3AccessKey;
-	// @Value("#{s3Properties['s3.secretKey']}")
+
 	@Value("0v3/JUq1hZ9eO7RK7qCcK2LdtLXiDTWHzDAOF1A4")
 	private String s3SecretKey;
-
-	@Inject
-	public SpitterController(SpitterService spitterService) {
-		this.spitterService = spitterService;
-	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String listSpitters(

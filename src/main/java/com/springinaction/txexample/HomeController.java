@@ -2,17 +2,14 @@ package com.springinaction.txexample;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@Transactional
 public class HomeController {
-	
+	@Autowired
 	private SpitterService spitterService;
 	public static final int DEFAULT_SPITTLES_PER_PAGE = 25;
 	private int spittlesPerPage = DEFAULT_SPITTLES_PER_PAGE;
@@ -24,23 +21,9 @@ public class HomeController {
 	public void setSpittlesPerPage(int spittlesPerPage) {
 		this.spittlesPerPage = spittlesPerPage;
 	}
-
-	@Inject
-	public HomeController(SpitterService spitterService) {
-		this.spitterService = spitterService;
-	}
 	
 	@RequestMapping(value={"/", "/home"}, method=RequestMethod.GET)
 	public String showHomePage(Map<String, Object> model) {
-		/*
-		Spitter spitter = new Spitter();
-		spitter.setFullName("fullName");
-		spitter.setUsername("username");
-		spitter.setEmail("11.c.cn");
-		spitter.setPassword("password");
-		spitter.setUpdateByEmail(false);
-		spitterService.saveSpitter(spitter);
-		*/
 		model.put("spittles", spitterService.getRecentSpittles(spittlesPerPage));
 		return "home";
 	}
